@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:ostad_flutter_batch_two/ui/screens/email_verification_screen.dart';
+import 'package:ostad_flutter_batch_two/ui/screens/profile_screen.dart';
+import 'package:ostad_flutter_batch_two/ui/state_managers/auth_controller.dart';
 import 'package:ostad_flutter_batch_two/ui/state_managers/bottom_navigation_bar_controller.dart';
+import 'package:ostad_flutter_batch_two/ui/state_managers/category_controller.dart';
+import 'package:ostad_flutter_batch_two/ui/state_managers/home_controller.dart';
+import 'package:ostad_flutter_batch_two/ui/state_managers/product_by_remark_controller.dart';
 import 'package:ostad_flutter_batch_two/ui/widgets/category_card_widget.dart';
 import 'package:get/get.dart';
 
@@ -19,20 +25,23 @@ class HomeScreen extends StatelessWidget {
         elevation: 0,
         title: Row(
           children: [
-            Image.asset('assets/images/logo_nav.png',scale: 8,),
+            Image.asset(
+              'assets/images/logo_nav.png',
+              scale: 6,
+            ),
             const Spacer(),
             AppBarIconButton(
-              iconData: Icons.person,
-              onTap: () {},
+              iconData: Icons.logout,
+              onTap: () {
+                Get.find<AuthController>().isLoggedIn().then((value) {
+                  if (value) {
+                   
+                   Get.find<AuthController>().logOut().then(
+                        (value) => Get.to(const EmailVerificationScreen()));
+                  } 
+                });
+              },
             ),
-            AppBarIconButton(
-              iconData: Icons.call,
-              onTap: () {},
-            ),
-            AppBarIconButton(
-              iconData: Icons.notifications_none,
-              onTap: () {},
-            )
           ],
         ),
       ),
@@ -40,12 +49,25 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SearchTextField(),
               const SizedBox(
                 height: 16,
               ),
-              HomeCarouselWidget(),
+              GetBuilder<HomeController>(builder: (homeController) {
+                if (homeController.getSliderInProgress) {
+                  return const SizedBox(
+                    height: 180,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+                return HomeCarouselWidget(
+                  homeSliderModel: homeController.homeSliderModel,
+                );
+              }),
               const SizedBox(
                 height: 8,
               ),
@@ -58,31 +80,30 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(
                 height: 8,
               ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: const [
-                    CategoryCardWidget(
-                      name: 'Computer',
+              GetBuilder<CategoryController>(builder: (categoryController) {
+                if (categoryController.getCategoryInProgress) {
+                  return const SizedBox(
+                    height: 90,
+                    child: Center(
+                      child: CircularProgressIndicator(),
                     ),
-                    CategoryCardWidget(
-                      name: 'Electronics',
-                    ),
-                    CategoryCardWidget(
-                      name: 'Clothes',
-                    ),
-                    CategoryCardWidget(
-                      name: 'Computer',
-                    ),
-                    CategoryCardWidget(
-                      name: 'Computer',
-                    ),
-                    CategoryCardWidget(
-                      name: 'Computer',
-                    ),
-                  ],
-                ),
-              ),
+                  );
+                }
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: categoryController.categoryModel.categories!
+                        .map(
+                          (e) => CategoryCardWidget(
+                              name: e.categoryName.toString(),
+                              imageUrl: e.categoryImg.toString(),
+                              id: e.id ?? 0),
+                        )
+                        .toList(),
+                  ),
+                );
+              }),
               const SizedBox(
                 height: 16,
               ),
@@ -93,17 +114,32 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(
                 height: 8,
               ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: const [
-                    ProductCard(),
-                    ProductCard(),
-                    ProductCard(),
-                    ProductCard(),
-                  ],
-                ),
-              ),
+              GetBuilder<ProductByRemarkController>(
+                  builder: (productByRemarkController) {
+                if (productByRemarkController
+                    .getPopularProductByRemarkInProgress) {
+                  return const SizedBox(
+                    height: 90,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children:
+                        productByRemarkController.popularProductsModel.products!
+                            .map(
+                              (product) => ProductCard(
+                                product: product,
+                              ),
+                            )
+                            .toList(),
+                  ),
+                );
+              }),
               const SizedBox(
                 height: 16,
               ),
@@ -114,17 +150,32 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(
                 height: 8,
               ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: const [
-                    ProductCard(),
-                    ProductCard(),
-                    ProductCard(),
-                    ProductCard(),
-                  ],
-                ),
-              ),
+              GetBuilder<ProductByRemarkController>(
+                  builder: (productByRemarkController) {
+                if (productByRemarkController
+                    .getPopularProductByRemarkInProgress) {
+                  return const SizedBox(
+                    height: 90,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children:
+                        productByRemarkController.specialProductsModel.products!
+                            .map(
+                              (product) => ProductCard(
+                                product: product,
+                              ),
+                            )
+                            .toList(),
+                  ),
+                );
+              }),
               const SizedBox(
                 height: 16,
               ),
@@ -135,17 +186,32 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(
                 height: 8,
               ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: const [
-                    ProductCard(),
-                    ProductCard(),
-                    ProductCard(),
-                    ProductCard(),
-                  ],
-                ),
-              )
+              GetBuilder<ProductByRemarkController>(
+                  builder: (productByRemarkController) {
+                if (productByRemarkController
+                    .getPopularProductByRemarkInProgress) {
+                  return const SizedBox(
+                    height: 90,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children:
+                        productByRemarkController.newProductsModel.products!
+                            .map(
+                              (product) => ProductCard(
+                                product: product,
+                              ),
+                            )
+                            .toList(),
+                  ),
+                );
+              }),
             ],
           ),
         ),

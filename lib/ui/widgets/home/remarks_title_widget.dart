@@ -21,7 +21,7 @@ class RemarksTitleWidget extends StatelessWidget {
         Text(
           remarksName,
           style: titleTextStyle.copyWith(
-              fontSize: 18, fontWeight: FontWeight.w600),
+              fontSize: 18, fontWeight: FontWeight.w600,color: Colors.white),
         ),
         TextButton(
           onPressed: onTapSeeAll,

@@ -6,8 +6,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ostad_flutter_batch_two/ui/state_managers/bottom_navigation_bar_controller.dart';
+import 'package:ostad_flutter_batch_two/ui/state_managers/cart_controller.dart';
+import 'package:ostad_flutter_batch_two/ui/state_managers/category_controller.dart';
+import 'package:ostad_flutter_batch_two/ui/state_managers/product_controller.dart';
+import 'package:ostad_flutter_batch_two/ui/state_managers/user_auth_controller.dart';
+import 'package:ostad_flutter_batch_two/ui/state_managers/user_profile_controller.dart';
 
 import 'ui/screens/splash_screen.dart';
+import 'ui/state_managers/auth_controller.dart';
+import 'ui/state_managers/home_controller.dart';
+import 'ui/state_managers/product_by_remark_controller.dart';
+import 'ui/state_managers/wish_list_controller.dart';
 import 'ui/utils/app_colors.dart';
 
 void main() {
@@ -20,15 +29,15 @@ class ShopApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
       initialBinding: GetXBindings(),
       home: const SplashScreen(),
-      themeMode: ThemeMode.light,
+      debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.dark,
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.purple,
+            backgroundColor:primaryColor,
             textStyle: const TextStyle(
               fontWeight: FontWeight.w400,
               letterSpacing: 0.6,
@@ -66,6 +75,15 @@ class GetXBindings extends Bindings {
   @override
   void dependencies() {
     Get.put(BottomNavigationBarController());
+    Get.put(UserAuthController());
+    Get.put(AuthController());
+    Get.put(UserProfileController());
+    Get.put(HomeController());
+    Get.put(CategoryController());
+    Get.put(ProductByRemarkController());
+    Get.put(ProductController());
+    Get.put(WishListController());
+    Get.put(CartController());
   }
 
 }

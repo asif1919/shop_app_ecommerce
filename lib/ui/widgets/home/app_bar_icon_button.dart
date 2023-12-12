@@ -19,14 +19,10 @@ class AppBarIconButton extends StatelessWidget {
       splashColor: primaryColor.withOpacity(0.1),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-        child: CircleAvatar(
-          backgroundColor: Colors.grey.shade200,
-          radius: 14,
-          child: Icon(
-            iconData,
-            size: 16,
-            color: softGreyColor,
-          ),
+        child: Icon(
+          iconData,
+          size: 26,
+          color: softGreyColor,
         ),
       ),
     );
